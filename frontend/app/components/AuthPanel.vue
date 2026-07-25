@@ -1,4 +1,10 @@
 <script setup lang="ts">
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+
 const emit = defineEmits<{ authenticated: [] }>()
 const { authenticate } = useApi()
 const { user } = useSession()
@@ -39,31 +45,36 @@ async function submit() {
       </div>
     </section>
 
-    <section class="auth-card">
-      <p class="eyebrow">{{ mode === 'register' ? 'Begin your garden journal' : 'Welcome back' }}</p>
-      <h2>{{ mode === 'register' ? 'Create your account' : 'Sign in' }}</h2>
+    <Card class="auth-card rounded-none border-0 shadow-none">
+      <CardHeader class="px-0">
+        <p class="eyebrow">{{ mode === 'register' ? 'Begin your garden journal' : 'Welcome back' }}</p>
+        <CardTitle class="font-serif text-4xl font-normal">{{ mode === 'register' ? 'Create your account' : 'Sign in' }}</CardTitle>
+      </CardHeader>
+      <CardContent class="px-0">
       <form @submit.prevent="submit">
-        <label v-if="mode === 'register'">
-          Your name
-          <input v-model="form.name" required autocomplete="name" placeholder="Alex Gardener">
-        </label>
-        <label>
-          Email
-          <input v-model="form.email" required type="email" autocomplete="email" placeholder="you@example.com">
-        </label>
-        <label>
-          Password
-          <input v-model="form.password" required minlength="8" type="password" autocomplete="current-password" placeholder="At least 8 characters">
-        </label>
-        <p v-if="error" class="error" role="alert">{{ error }}</p>
-        <button class="button primary full" :disabled="busy">
+        <div v-if="mode === 'register'" class="grid gap-2">
+          <Label for="auth-name">Your name</Label>
+          <Input id="auth-name" v-model="form.name" required autocomplete="name" placeholder="Alex Gardener" />
+        </div>
+        <div class="grid gap-2">
+          <Label for="auth-email">Email</Label>
+          <Input id="auth-email" v-model="form.email" required type="email" autocomplete="email" placeholder="you@example.com" />
+        </div>
+        <div class="grid gap-2">
+          <Label for="auth-password">Password</Label>
+          <Input id="auth-password" v-model="form.password" required minlength="8" type="password" autocomplete="current-password" placeholder="At least 8 characters" />
+        </div>
+        <Alert v-if="error" variant="destructive">
+          <AlertDescription>{{ error }}</AlertDescription>
+        </Alert>
+        <Button class="w-full" :disabled="busy">
           {{ busy ? 'Just a moment…' : mode === 'register' ? 'Start growing' : 'Sign in' }}
-        </button>
+        </Button>
       </form>
-      <button class="text-button" @click="mode = mode === 'register' ? 'login' : 'register'">
+      <Button variant="link" class="mt-4 w-full" @click="mode = mode === 'register' ? 'login' : 'register'">
         {{ mode === 'register' ? 'Already have an account? Sign in' : 'New here? Create an account' }}
-      </button>
-    </section>
+      </Button>
+      </CardContent>
+    </Card>
   </main>
 </template>
-

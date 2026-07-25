@@ -70,6 +70,9 @@ lint Python with Ruff.
 Vue components use TypeScript, `<script setup>`, and `PascalCase` filenames.
 Keep server data access in API composables. Design mobile-first and retain
 accessible labels, keyboard behavior, readable errors, and useful empty states.
+Use the code-owned shadcn-vue components in `frontend/app/components/ui/` for
+interactive primitives instead of introducing parallel component patterns.
+Review UI work against `docs/design-checklist.md`.
 
 Prefer small, direct changes. This is a personal garden project, so prioritize
 features that improve everyday use over production infrastructure, premature

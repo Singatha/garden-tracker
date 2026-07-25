@@ -1,17 +1,26 @@
 <script setup lang="ts">
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+
 defineProps<{ title: string }>()
 defineEmits<{ close: [] }>()
 </script>
 
 <template>
-  <div class="modal-backdrop" @click.self="$emit('close')">
-    <section class="modal" role="dialog" aria-modal="true" :aria-label="title">
-      <header>
-        <h2>{{ title }}</h2>
-        <button class="icon-button" aria-label="Close" @click="$emit('close')">×</button>
-      </header>
+  <Dialog :open="true" @update:open="(open) => !open && $emit('close')">
+    <DialogContent class="max-h-[92vh] overflow-y-auto sm:max-w-xl">
+      <DialogHeader>
+        <DialogTitle>{{ title }}</DialogTitle>
+        <DialogDescription>
+          Add the details below. Required fields are marked by the browser.
+        </DialogDescription>
+      </DialogHeader>
       <slot />
-    </section>
-  </div>
+    </DialogContent>
+  </Dialog>
 </template>
-

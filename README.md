@@ -1,7 +1,7 @@
 # Backyard Garden Tracker
 
 A mobile-first garden journal and task tracker built with FastAPI, PostgreSQL,
-Nuxt 4, Vue 3, and TypeScript.
+Nuxt 4, Vue 3, TypeScript, Tailwind CSS, and shadcn-vue.
 
 ## Run with Docker
 

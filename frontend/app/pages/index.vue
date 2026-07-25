@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
 import type {
   Area,
   Dashboard,
@@ -23,6 +27,7 @@ const activeView = ref<'today' | 'garden' | 'journal' | 'harvests'>('today')
 const modal = ref<'garden' | 'area' | 'planting' | 'task' | 'activity' | 'harvest' | null>(null)
 const plantingFilter = ref<'all' | 'growing' | 'planned' | 'finished' | 'failed'>('all')
 const error = ref('')
+const notice = ref('')
 const loading = ref(false)
 const today = new Date().toISOString().slice(0, 10)
 
@@ -105,6 +110,7 @@ async function createGarden() {
   await loadGardens()
   selectedGardenId.value = gardens.value.at(-1)?.id || gardens.value[0]?.id || null
   await loadGardenData()
+  notice.value = 'Garden created.'
 }
 
 async function createResource(kind: 'area' | 'planting' | 'task' | 'activity' | 'harvest') {
@@ -117,11 +123,13 @@ async function createResource(kind: 'area' | 'planting' | 'task' | 'activity' | 
   await request(`/gardens/${selectedGardenId.value}/${paths[kind]}`, { method: 'POST', body })
   modal.value = null
   await loadGardenData()
+  notice.value = `${kind.charAt(0).toUpperCase() + kind.slice(1)} saved.`
 }
 
 async function completeTask(id: number) {
   await request(`/gardens/${selectedGardenId.value}/tasks/${id}/complete`, { method: 'POST' })
   await loadGardenData()
+  notice.value = 'Task completed.'
 }
 
 async function changePlantingStatus(planting: Planting, status: string) {
@@ -130,6 +138,7 @@ async function changePlantingStatus(planting: Planting, status: string) {
     body: { status },
   })
   await loadGardenData()
+  notice.value = `${planting.crop} marked as ${status}.`
 }
 
 function logout() {
@@ -169,19 +178,30 @@ watch(selectedGardenId, loadGardenData)
           </select>
           <h1 v-else>Your first garden</h1>
         </div>
-        <button class="button primary" @click="modal = gardens.length ? 'planting' : 'garden'">
+        <Button @click="modal = gardens.length ? 'planting' : 'garden'">
           {{ gardens.length ? '+ Add planting' : '+ Create garden' }}
-        </button>
+        </Button>
       </header>
 
-      <p v-if="error" class="error">{{ error }}</p>
-      <div v-if="loading" class="loading">Tending your records…</div>
+      <Alert v-if="error" variant="destructive" class="mb-4">
+        <AlertDescription>{{ error }}</AlertDescription>
+      </Alert>
+      <Alert v-if="notice" class="mb-4 border-emerald-600/30 bg-emerald-50 text-emerald-950">
+        <AlertDescription class="flex items-center justify-between">
+          {{ notice }}
+          <Button variant="ghost" size="sm" @click="notice = ''">Dismiss</Button>
+        </AlertDescription>
+      </Alert>
+      <div v-if="loading" class="grid gap-4" aria-label="Loading garden">
+        <Skeleton class="h-36 rounded-2xl" />
+        <div class="grid gap-4 md:grid-cols-2"><Skeleton class="h-72 rounded-2xl" /><Skeleton class="h-72 rounded-2xl" /></div>
+      </div>
 
       <section v-else-if="!gardens.length" class="empty-hero">
         <span class="empty-icon">⌑</span>
         <h2>Give your garden a home</h2>
         <p>Create a garden, then add beds or containers and record what you are growing.</p>
-        <button class="button primary" @click="modal = 'garden'">Create my garden</button>
+        <Button @click="modal = 'garden'">Create my garden</Button>
       </section>
 
       <template v-else-if="activeView === 'today'">
@@ -231,12 +251,12 @@ watch(selectedGardenId, loadGardenData)
               <option value="finished">Finished</option>
               <option value="failed">Failed</option>
             </select>
-            <button class="button secondary" @click="modal = 'area'">+ Add area</button>
+            <Button variant="secondary" @click="modal = 'area'">+ Add area</Button>
           </div>
         </section>
         <div v-if="!areas.length" class="empty-hero compact">
           <h2>Start with a growing area</h2><p>Add a bed, container, row, or greenhouse section.</p>
-          <button class="button primary" @click="modal = 'area'">Add an area</button>
+          <Button @click="modal = 'area'">Add an area</Button>
         </div>
         <div class="area-grid">
           <section v-for="area in areas" :key="area.id" class="area-card">
@@ -263,7 +283,7 @@ watch(selectedGardenId, loadGardenData)
       <template v-else-if="activeView === 'journal'">
         <section class="section-heading">
           <div><p class="eyebrow">A history you can learn from</p><h2>Garden journal</h2></div>
-          <button class="button primary" :disabled="!plantings.length" @click="modal = 'activity'">+ Log activity</button>
+          <Button :disabled="!plantings.length" @click="modal = 'activity'">+ Log activity</Button>
         </section>
         <section class="panel">
           <div v-if="!activities.length" class="empty-small tall">
@@ -274,7 +294,7 @@ watch(selectedGardenId, loadGardenData)
             <time>{{ activity.occurred_on }}</time>
             <span class="journal-dot" />
             <div>
-              <strong>{{ activity.event_type.replaceAll('_', ' ') }}</strong>
+              <Badge variant="secondary">{{ activity.event_type.replaceAll('_', ' ') }}</Badge>
               <p>{{ plantingName(activity.planting_id) }}</p>
               <p v-if="activity.notes" class="journal-note">{{ activity.notes }}</p>
             </div>
@@ -285,7 +305,7 @@ watch(selectedGardenId, loadGardenData)
       <template v-else>
         <section class="section-heading">
           <div><p class="eyebrow">What the garden gave</p><h2>Harvest journal</h2></div>
-          <button class="button primary" :disabled="!plantings.length" @click="modal = 'harvest'">+ Record harvest</button>
+          <Button :disabled="!plantings.length" @click="modal = 'harvest'">+ Record harvest</Button>
         </section>
         <section class="panel">
           <div v-if="!harvests.length" class="empty-small tall"><span>♧</span><h3>Your harvest story starts here</h3><p>Record the first thing you pick from the garden.</p></div>
