@@ -7,7 +7,9 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 
-defineProps<{ title: string }>()
+withDefaults(defineProps<{ title: string, description?: string }>(), {
+  description: 'Fill in the details below and save when you are ready.',
+})
 defineEmits<{ close: [] }>()
 </script>
 
@@ -16,9 +18,7 @@ defineEmits<{ close: [] }>()
     <DialogContent class="max-h-[92vh] overflow-y-auto sm:max-w-xl">
       <DialogHeader>
         <DialogTitle>{{ title }}</DialogTitle>
-        <DialogDescription>
-          Add the details below. Required fields are marked by the browser.
-        </DialogDescription>
+        <DialogDescription>{{ description }}</DialogDescription>
       </DialogHeader>
       <slot />
     </DialogContent>
