@@ -1,4 +1,10 @@
 <script setup lang="ts">
+import TodayDashboard from '@/components/dashboard/TodayDashboard.vue'
+import GardenDialogs from '@/components/forms/GardenDialogs.vue'
+import GardenOverview from '@/components/garden/GardenOverview.vue'
+import HarvestJournal from '@/components/harvest/HarvestJournal.vue'
+import GardenJournal from '@/components/journal/GardenJournal.vue'
+import GardenSidebar from '@/components/navigation/GardenSidebar.vue'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select'

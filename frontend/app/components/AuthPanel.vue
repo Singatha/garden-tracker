@@ -19,6 +19,7 @@ async function submit() {
   busy.value = true
   try {
     user.value = await authenticate(mode.value, form)
+    await nextTick()
     emit('authenticated')
   } catch (reason: any) {
     error.value = reason?.data?.detail || 'Something went wrong. Please try again.'
