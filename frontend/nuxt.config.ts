@@ -19,10 +19,10 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: 'Plot & Sprout',
+      title: 'Gardenwise',
       meta: [
         { name: 'description', content: 'A calm, practical tracker for your backyard garden.' },
-        { name: 'theme-color', content: '#173c2b' },
+        { name: 'theme-color', content: '#111111' },
       ],
     },
   },

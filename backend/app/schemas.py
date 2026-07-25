@@ -26,6 +26,10 @@ class UserRead(ORMModel):
     name: str
 
 
+class UserUpdate(BaseModel):
+    name: str = Field(min_length=1, max_length=120)
+
+
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"

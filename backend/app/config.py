@@ -5,7 +5,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    app_name: str = "Backyard Garden API"
+    app_name: str = "Gardenwise API"
     api_prefix: str = "/api/v1"
     database_url: str = "sqlite+aiosqlite:///./garden.db"
     secret_key: str = "development-only-secret"

@@ -32,18 +32,13 @@ async function submit() {
 <template>
   <main class="auth-page">
     <section class="auth-story">
-      <div class="brand-mark">P<span>&</span>S</div>
+      <div class="wordmark">Gardenwise</div>
       <p class="eyebrow">Your garden, remembered</p>
       <h1>Grow with a little more confidence.</h1>
       <p class="lede">
         Keep track of what is planted, what needs doing, and everything your garden gives back.
       </p>
-      <div class="illustration" aria-hidden="true">
-        <span class="sun" />
-        <span class="leaf leaf-one">◒</span>
-        <span class="leaf leaf-two">◒</span>
-        <span class="stem" />
-      </div>
+      <div class="auth-grid" aria-hidden="true" />
     </section>
 
     <Card class="auth-card rounded-none border-0 shadow-none">

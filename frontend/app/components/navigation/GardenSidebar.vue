@@ -1,37 +1,50 @@
 <script setup lang="ts">
-import { Button } from '@/components/ui/button'
+import {
+  BookOpenIcon,
+  CalendarDaysIcon,
+  LayoutDashboardIcon,
+  SettingsIcon,
+  SproutIcon,
+} from '@lucide/vue'
 
-type ViewName = 'today' | 'garden' | 'journal' | 'harvests'
+type ViewName = 'today' | 'garden' | 'journal' | 'harvests' | 'settings'
 
 defineProps<{ activeView: ViewName; userName: string }>()
-defineEmits<{ navigate: [view: ViewName]; logout: [] }>()
 
-const items: Array<{ value: ViewName; icon: string; label: string }> = [
-  { value: 'today', icon: '☀', label: 'Today' },
-  { value: 'garden', icon: '⌑', label: 'My garden' },
-  { value: 'journal', icon: '≋', label: 'Journal' },
-  { value: 'harvests', icon: '♧', label: 'Harvests' },
+const items = [
+  { value: 'today', icon: LayoutDashboardIcon, label: 'Today' },
+  { value: 'garden', icon: SproutIcon, label: 'My garden' },
+  { value: 'journal', icon: BookOpenIcon, label: 'Journal' },
+  { value: 'harvests', icon: CalendarDaysIcon, label: 'Harvests' },
+  { value: 'settings', icon: SettingsIcon, label: 'Settings' },
 ]
 </script>
 
 <template>
   <aside class="sidebar">
-    <div class="brand"><span class="brand-mark small">P<span>&</span>S</span><strong>Plot & Sprout</strong></div>
+    <NuxtLink to="/today" class="brand" aria-label="Gardenwise home">
+      <strong>Gardenwise</strong>
+    </NuxtLink>
     <nav aria-label="Main navigation">
-      <Button
+      <NuxtLink
         v-for="item in items"
         :key="item.value"
-        variant="ghost"
+        :to="`/${item.value}`"
         :class="{ active: activeView === item.value }"
         :aria-current="activeView === item.value ? 'page' : undefined"
-        @click="$emit('navigate', item.value)"
       >
-        <span>{{ item.icon }}</span>{{ item.label }}
-      </Button>
+        <component :is="item.icon" aria-hidden="true" />{{ item.label }}
+      </NuxtLink>
     </nav>
-    <div class="sidebar-bottom">
-      <p>{{ userName }}</p>
-      <Button variant="link" @click="$emit('logout')">Sign out</Button>
-    </div>
+    <NuxtLink
+      to="/settings"
+      class="profile-link"
+      :class="{ active: activeView === 'settings' }"
+      :aria-current="activeView === 'settings' ? 'page' : undefined"
+    >
+      <span class="profile-avatar">{{ userName.slice(0, 1).toUpperCase() }}</span>
+      <span><strong>{{ userName }}</strong><small>Profile settings</small></span>
+      <SettingsIcon aria-hidden="true" />
+    </NuxtLink>
   </aside>
 </template>

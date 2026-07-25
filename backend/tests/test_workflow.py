@@ -68,3 +68,13 @@ async def test_garden_isolation(client: AsyncClient, auth_headers: dict[str, str
     other_headers = {"Authorization": f"Bearer {other.json()['access_token']}"}
     response = await client.get(f"/api/v1/gardens/{garden['id']}/areas", headers=other_headers)
     assert response.status_code == 404
+
+
+async def test_update_profile(client: AsyncClient, auth_headers: dict[str, str]):
+    response = await client.patch(
+        "/api/v1/auth/me",
+        json={"name": "Updated Gardener"},
+        headers=auth_headers,
+    )
+    assert response.status_code == 200
+    assert response.json()["name"] == "Updated Gardener"
