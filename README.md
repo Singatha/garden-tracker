@@ -13,12 +13,6 @@ docker compose up --build
 Open the web app at http://localhost:3000 and API documentation at
 http://localhost:8000/docs.
 
-The same workflow is available as:
-
-```bash
-make up
-```
-
 ## Local development
 
 Backend:
@@ -48,18 +42,6 @@ npm run dev
 - Create, complete, and monitor due tasks
 - Record harvest quantities
 - View a focused Today dashboard
-
-## Useful commands
-
-```bash
-make up         # run the app
-make down       # stop it
-make logs       # follow container logs
-make test       # backend tests
-make lint       # backend lint and format check
-make typecheck  # frontend TypeScript check
-make check      # run all checks and builds
-```
 
 This is intentionally a personal project. The current priorities are useful
 garden features and a simple local workflow. See [docs/roadmap.md](docs/roadmap.md)
